@@ -107,6 +107,19 @@ export const categories = ['All', 'Branding', 'Print & Swag', 'Social', 'Certifi
 export const projects = [
   // ---------- Top projects ----------
   {
+    id: 'inspire-inclusion',
+    title: "#InspireInclusion · Women's Day",
+    kind: 'Campaign kit',
+    cat: 'Branding',
+    featured: true,
+    wide: true,
+    color: '#5B1A4A',
+    blurb: "A full Women's Day kit under the FEMPOWER banner: an 8 March standee, a heart-hands photobooth, a gratitude board, a thank-you postcard and a bookmark with six tips for practising inclusion at work.",
+    cover: '/work/ii-cover.jpg',
+    coverSm: '/work/ii-trio.jpg',
+    images: ['/work/ii-trio.jpg', '/work/ii-card.jpg', '/work/ii-bookmark.jpg'],
+  },
+  {
     id: 'pod',
     title: 'POD Premier League',
     kind: 'Logo',

@@ -24,7 +24,7 @@ body {
   font-size: 17px;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
-  overflow-x: hidden;
+  overflow-x: clip; /* clip (not hidden) so position: sticky works reliably on iOS */
 }
 /* subtle paper grain */
 body::before {
@@ -187,6 +187,9 @@ em { font-family: var(--serif); font-style: italic; font-weight: 400; letter-spa
   background: var(--c); border: 2px solid var(--ink);
   transition: transform 0.25s, box-shadow 0.25s;
 }
+.card--wide { grid-column: 1 / -1; }
+.card--wide .card__img { aspect-ratio: 21 / 9; }
+.card__img picture { display: contents; }
 .card__img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s cubic-bezier(.2,.8,.2,1); }
 .card:hover .card__img { transform: translate(-4px, -4px) rotate(-0.6deg); box-shadow: 8px 8px 0 var(--c); }
 .card:hover .card__img img { transform: scale(1.05); }
@@ -202,6 +205,36 @@ em { font-family: var(--serif); font-style: italic; font-weight: 400; letter-spa
   font-family: var(--mono); font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em;
   color: var(--ink-2); white-space: nowrap;
 }
+
+/* ---------- Hidden layer ("vault") ---------- */
+.vault { margin-top: 56px; }
+.vault__btn {
+  width: 100%; display: flex; align-items: center; gap: 20px; text-align: left; cursor: pointer;
+  padding: 18px 22px; background: var(--ink); color: var(--paper); border: 2px solid var(--ink); border-radius: 22px;
+  box-shadow: 5px 5px 0 var(--cobalt); transition: transform 0.15s, box-shadow 0.15s, background 0.2s;
+}
+.vault__btn:hover { transform: translate(-2px, -2px); box-shadow: 7px 7px 0 var(--cobalt); }
+.vault__btn:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(--cobalt); }
+.vault__btn--open { background: var(--paper); color: var(--ink); box-shadow: 5px 5px 0 var(--sun); }
+.vault__btn--open:hover { box-shadow: 7px 7px 0 var(--sun); }
+.vault__stack { display: flex; flex: none; padding-left: 14px; }
+.vault__stack img {
+  width: 62px; height: 62px; object-fit: cover; border-radius: 14px; margin-left: -14px; background: var(--c);
+  border: 3px solid var(--ink); transform: rotate(calc((var(--i) - 2) * 5deg));
+  transition: transform 0.3s;
+}
+.vault__btn--open .vault__stack img { border-color: var(--paper); }
+.vault__btn:hover .vault__stack img { transform: rotate(calc((var(--i) - 2) * 9deg)) translateY(-4px); }
+.vault__txt { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.vault__txt b { font-size: clamp(20px, 2.4vw, 30px); letter-spacing: -0.03em; line-height: 1.1; }
+.vault__txt small { font-family: var(--mono); font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; opacity: 0.7; margin-top: 4px; }
+.vault__plus {
+  flex: none; width: 48px; height: 48px; border-radius: 50%; display: grid; place-items: center;
+  background: var(--sun); color: var(--ink); font-size: 28px; font-weight: 800; line-height: 1;
+}
+.vault__panel { overflow: hidden; }
+.vault__panel .chips { margin-top: 4px; }
+.grid--rest { margin-top: 22px; padding-bottom: 6px; }
 
 /* ---------- Lightbox ---------- */
 .lb {
@@ -340,10 +373,10 @@ em { font-family: var(--serif); font-style: italic; font-weight: 400; letter-spa
   body { font-size: 16px; }
 
   /* nav: burger + dropdown card */
-  .nav { padding-block: 10px; }
+  .nav { padding-block: 3px; background: var(--paper); backdrop-filter: none; border-bottom: 1px solid var(--line); }
   .nav__burger {
     display: inline-flex; flex-direction: column; justify-content: center; align-items: center; gap: 6px;
-    width: 46px; height: 46px; border-radius: 50%; border: 2px solid var(--ink); background: var(--paper); cursor: pointer;
+    width: 42px; height: 42px; border-radius: 50%; border: 2px solid var(--ink); background: var(--paper); cursor: pointer;
   }
   .nav__burger span { width: 18px; height: 2px; background: var(--ink); transition: transform 0.2s; }
   .nav--open .nav__burger span:first-child { transform: translateY(4px) rotate(45deg); }
@@ -354,6 +387,7 @@ em { font-family: var(--serif); font-style: italic; font-weight: 400; letter-spa
     background: var(--paper); border: 2px solid var(--ink); border-radius: 20px; box-shadow: 6px 6px 0 var(--ink);
   }
   .nav--open .nav__links { display: flex; }
+  .nav__logo { font-size: 24px; }
   .nav__links a { padding: 14px 16px; font-size: 18px; border-radius: 12px; }
   .nav__links .nav__cta { justify-content: center; margin-top: 4px; }
 
@@ -378,6 +412,13 @@ em { font-family: var(--serif); font-style: italic; font-weight: 400; letter-spa
   .chip { flex: none; }
   .label { margin-top: 28px; }
   .grid, .grid--featured { grid-template-columns: 1fr; gap: 22px; }
+  .card--wide .card__img { aspect-ratio: 16 / 9; }
+  .vault { margin-top: 40px; }
+  .vault__btn { padding: 14px; gap: 12px; border-radius: 18px; }
+  .vault__stack img { width: 40px; height: 40px; border-radius: 10px; border-width: 2px; margin-left: -12px; }
+  .vault__stack img:nth-child(n + 4) { display: none; }
+  .vault__txt small { display: none; }
+  .vault__plus { width: 40px; height: 40px; font-size: 24px; }
   .card__meta { padding-top: 10px; }
   .card__meta h3, .card--big .card__meta h3 { font-size: 20px; }
 
